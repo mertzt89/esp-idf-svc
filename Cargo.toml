@@ -29,10 +29,10 @@ cstr_core = "0.2"
 uncased = "0.9.6"
 anyhow = { version = "1", default-features = false, optional = true } # Only used by the deprecated httpd module
 #embedded-svc = { version = "0.22", default-features = false }
-embedded-svc = { path = "../embedded-svc", default-features = false }
+embedded-svc = { version = "0.22", default-features = false, git = "https://github.com/esp-rs/embedded-svc", branch = "next" }
 esp-idf-sys = { version = "0.31.5", default-features = false, features = ["native"] }
 #esp-idf-hal = { version = "0.38", default-features = false, features = ["esp-idf-sys"] }
-esp-idf-hal = { path = "../esp-idf-hal", default-features = false, features = ["esp-idf-sys"] }
+esp-idf-hal = { version = "0.38", default-features = false, features = ["esp-idf-sys"], git = "https://github.com/esp-rs/esp-idf-hal", branch = "next" }
 
 [build-dependencies]
 embuild = "0.29"
