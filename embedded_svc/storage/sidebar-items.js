@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["DynStorageImpl",""],["NoSpaceError",""]],"trait":[["DynStorage",""],["RawStorage",""],["Storage",""],["StorageBase",""]]};

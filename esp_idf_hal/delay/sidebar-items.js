@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["Ets","Espressif Task Scheduler-based delay provider"],["FreeRtos","FreeRTOS-based delay provider"],["TickType",""]]};

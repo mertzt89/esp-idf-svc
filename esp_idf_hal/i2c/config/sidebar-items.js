@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["MasterConfig","I2C Master configuration"],["SlaveConfig","I2C Slave configuration"]]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"trait":[["Write","Write half of a serial interface (blocking variant)"]]};

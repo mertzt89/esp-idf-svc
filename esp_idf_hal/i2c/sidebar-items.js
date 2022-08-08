@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":[["config","I2C configuration"]],"struct":[["I2C0",""],["I2cError",""],["Master",""],["MasterPins",""],["Slave",""],["SlavePins",""]],"trait":[["I2c",""]]};
