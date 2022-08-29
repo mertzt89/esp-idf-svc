@@ -1,3 +1,4 @@
+use core::convert::TryFrom;
 use core::convert::TryInto;
 use core::ptr;
 
@@ -357,8 +358,18 @@ impl EspNetif {
     }
 
     pub fn get_ip_info(&self) -> Result<ipv4::IpInfo, EspError> {
-        // TODO
-        todo!()
+        let mut info = esp_netif_ip_info_t::default();
+        esp!(unsafe { esp_netif_get_ip_info(self.0, &mut info) })?;
+        Ok(ipv4::IpInfo {
+            ip: info.ip.addr.to_be().into(),
+            subnet: ipv4::Subnet {
+                gateway: info.gw.addr.to_be().into(),
+                mask: ipv4::Mask::try_from(ipv4::Ipv4Addr::from(info.netmask.addr.to_be()))
+                    .unwrap(),
+            },
+            dns: Some(self.get_dns()),
+            secondary_dns: Some(self.get_secondary_dns()),
+        })
     }
 
     pub fn get_key(&self) -> heapless::String<32> {
