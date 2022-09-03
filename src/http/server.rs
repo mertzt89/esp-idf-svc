@@ -948,8 +948,7 @@ pub mod ws {
 
         raw_frame: *const httpd_ws_frame_t,
 
-        error_code: Mutex<RawMutex, Option<u32>>,
-        condvar: Condvar<RawCondvar>,
+        error_code: Arc<(Mutex<RawMutex, Option<u32>>, Condvar<RawCondvar>)>,
     }
 
     pub struct EspHttpWsDetachedSender {
@@ -978,8 +977,9 @@ pub mod ws {
                 ESP_FAIL
             };
 
-            *request.error_code.lock() = Some(ret as _);
-            request.condvar.notify_all();
+            let mut error_code = request.error_code.0.lock();
+            error_code.replace(ret as _);
+            request.error_code.1.notify_all();
         }
     }
 
@@ -1012,9 +1012,10 @@ pub mod ws {
 
                     raw_frame: &raw_frame as *const _,
 
-                    error_code: Mutex::new(None),
-                    condvar: Condvar::new(),
+                    error_code: Arc::new((Mutex::new(None), Condvar::new())),
                 };
+
+                let error_code_arc = send_request.error_code.clone();
 
                 esp!(unsafe {
                     httpd_queue_work(
@@ -1024,13 +1025,12 @@ pub mod ws {
                     )
                 })?;
 
-                let mut guard = send_request.error_code.lock();
-
-                while guard.is_none() {
-                    guard = send_request.condvar.wait(guard);
+                let mut error_code = error_code_arc.0.lock();
+                while error_code.is_none() {
+                    error_code = error_code_arc.1.wait(error_code);
                 }
 
-                esp!((*guard).unwrap())?;
+                esp!((*error_code).unwrap())?;
             } else {
                 esp!(ESP_FAIL)?;
             }
